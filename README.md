@@ -1,19 +1,19 @@
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidColorPicker-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1738)
-# AndroidColorPicker
+# ColorPickerOSC
 
-Very simple color picker, Android equialent of<br/>
-https://github.com/FWCarlos/NKO-Color-Picker-View-iOS
 <br/>
-just simple [GradientView](https://github.com/jbruchanov/AndroidColorPicker/blob/master/app/src/main/java/com/scurab/android/colorpicker/GradientView.java)
+
+Pick a color and send through OSC. 
+The user selects the color and the alpha through a color picker interface.
+Each modification is sent through OSC to an IP defined on the settings.
+Actually, the UnicastUDP is the only protocol available.
+The settings have options to define the IP and Port.
 
 
-### Screenshot Android
-![](/publish/screenshot.jpg) 
+TODO:
+- optimize the interface object SeekBar Alpha
+- add Multicast support
+- add preference option to change the OSC mapping
 
-#### Sample App
-[Download Sample](https://github.com/jbruchanov/AndroidColorPicker/blob/master/publish/color_picker.apk)
-
-![alt tag](http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=https://github.com/jbruchanov/AndroidColorPicker/blob/master/publish/color_picker.apk&chld=H|0)
 
 #### License
 Licensed under the Apache License, Version 2.0 (the "License");

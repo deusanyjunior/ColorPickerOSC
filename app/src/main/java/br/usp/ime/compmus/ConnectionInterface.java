@@ -14,46 +14,46 @@ public interface ConnectionInterface {
 	/*
 	 * Address of push messages or push channel
 	 */
-	public static final String PUSH = "mobcolorpicker-color";
+	String PUSH = "colorpickerosc-color";
 
 	/**
 	 * Use this method to get the name of the connection interface.
 	 * @return connection interface name
 	 */
-	public String getName();
+	String getName();
 	
 	/**
 	 * Use this method to get the name of the setting defined on the preferences.
 	 * This name is used to know if this connection is going to be used during the tests.
 	 * @return setting name
 	 */
-	public String getSettingName();
+	String getSettingName();
 	
 	/** Load connection settings from shared preferences.
 	 */
-	public void loadSettings(Context context);
+	void loadSettings(Context context);
 
 	/**
 	 * Try to connect using this connection method.
 	 * @return true if connected
 	 */
-	public boolean connect();
+	boolean connect();
 	
 	/**
 	 * Try to disconnect.
 	 * @return true if disconnected
 	 */
-	public boolean disconnect();
+	boolean disconnect();
 
 	/**
 	 * Check the connection;
-	 * @return
+	 * @return true if is connected
 	 */
-	public boolean isConnected();
+	boolean isConnected();
 
 	/**
 	 * Send data through this connection method.
 	 * @return true if the data has been sent
 	 */
-	public boolean send(String address, Packet packet);
+	boolean send(String address, Packet packet);
 }

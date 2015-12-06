@@ -5,20 +5,14 @@
     <string name="pref_titleSettings">Settings</string>
     <string name="pref_titleListConnections">Selected connection</string>
     <string name="pref_sumaryListConnections">Select the connection</string>
-    <string-array name="pref_connections">
-        <item>Unicast TCP</item>
+    <string-array name="pref_connections">TheAiA
         <item>Unicast UDP</item>
         <item>Multicast</item>
     </string-array>
     <string-array name="pref_connectionsValues">
-        <item>pref_connectionUnicast</item>
         <item>pref_connectionUnicastUDP</item>
         <item>pref_connectionMulticast</item>
     </string-array>
-    <string name="pref_titleUnicast">Unicast</string>
-    <string name="pref_summaryConnectionUnicast">Define Host and Port for TCP.</string>
-    <string name="pref_titleUnicastHost">Host</string>
-    <string name="pref_titleUnicastPort">Port</string>
     <string name="pref_titleUnicastUDP">Unicast UDP</string>
     <string name="pref_summaryConnectionUnicastUDP">Define Host and Port for UDP.</string>
     <string name="pref_titleUnicastUDPHost">Host</string>
