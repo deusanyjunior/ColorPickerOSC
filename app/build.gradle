@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.0"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.scurab.android.colorpicker"
-        minSdkVersion 15
-        targetSdkVersion 22
+        applicationId "br.ime.compmus.colorpickerosc"
+        minSdkVersion 10
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -21,4 +21,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.illposed.osc:javaosc-core:0.3'
 }
