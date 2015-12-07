@@ -17,14 +17,14 @@ import java.util.ArrayList;
 import com.scurab.android.colorpicker.R;
 
 @SuppressWarnings("deprecation")
-public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class PreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         loadNetworkInterfaces();
-        PreferenceManager.setDefaultValues(SettingsActivity.this, R.xml.preferences,
+        PreferenceManager.setDefaultValues(PreferencesActivity.this, R.xml.preferences,
                 false);
         initSummary(getPreferenceScreen());
     }
@@ -62,22 +62,30 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     }
 
     private void updatePrefSummary(Preference p) {
-        if (p instanceof ListPreference) {
-            ListPreference listPref = (ListPreference) p;
-            p.setSummary(listPref.getEntry());
-        }
-        if (p instanceof EditTextPreference) {
-            EditTextPreference editTextPref = (EditTextPreference) p;
-            if (p.getTitle().toString().contains("assword"))
-            {
-                p.setSummary("******");
-            } else {
+
+        try {
+            if (p instanceof ListPreference) {
+
+                ListPreference listPref = (ListPreference) p;
+                p.setSummary(listPref.getEntry());
+            }
+            if (p instanceof EditTextPreference) {
+
+                EditTextPreference editTextPref = (EditTextPreference) p;
+                if (p.getTitle().toString().contains("assword")) {
+                    p.setSummary("******");
+                } else {
+                    p.setSummary(editTextPref.getText());
+                }
+            }
+            if (MobileDevice.getSystemBuild() >= 11 && p instanceof MultiSelectListPreference) {
+
+                EditTextPreference editTextPref = (EditTextPreference) p;
                 p.setSummary(editTextPref.getText());
             }
-        }
-        if (MobileDevice.getSystemBuild() >= 11 && p instanceof MultiSelectListPreference) {
-            EditTextPreference editTextPref = (EditTextPreference) p;
-            p.setSummary(editTextPref.getText());
+        } catch (ClassCastException e) {
+
+            e.printStackTrace();
         }
     }
 

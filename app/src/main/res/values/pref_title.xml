@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
 
-    <string name="title_activity_settings">Settings</string>
-    <string name="pref_titleSettings">Settings</string>
+    <string name="title_activity_preferences">Preferences</string>
+    <string name="pref_titlePreferences">Preferences</string>
+
+    <string name="pref_titleListColorMode">Selected color mode</string>
+    <string name="pref_summaryListColorMode">Select the color mode</string>
+    <string-array name="pref_colorMode">
+        <item>ARGB</item>
+        <item>RGBA</item>
+    </string-array>
+    <string-array name="pref_colorModeValues">
+        <item>ARGB</item>
+        <item>RGBA</item>
+    </string-array>
+
     <string name="pref_titleListConnections">Selected connection</string>
-    <string name="pref_sumaryListConnections">Select the connection</string>
-    <string-array name="pref_connections">TheAiA
+    <string name="pref_summaryListConnections">Select the connection</string>
+    <string-array name="pref_connections">
         <item>Unicast UDP</item>
         <item>Multicast</item>
     </string-array>
@@ -13,6 +25,7 @@
         <item>pref_connectionUnicastUDP</item>
         <item>pref_connectionMulticast</item>
     </string-array>
+
     <string name="pref_titleUnicastUDP">Unicast UDP</string>
     <string name="pref_summaryConnectionUnicastUDP">Define Host and Port for UDP.</string>
     <string name="pref_titleUnicastUDPHost">Host</string>

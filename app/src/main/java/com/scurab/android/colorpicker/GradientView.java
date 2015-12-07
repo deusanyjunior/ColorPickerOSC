@@ -12,6 +12,7 @@ import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -25,15 +26,9 @@ import android.view.View;
 @SuppressWarnings("unused")
 public class GradientView extends View {
 
-    public interface OnColorChangedListener {
-        void onColorChanged(GradientView view, int color);
-    }
-
     private static final boolean DEBUG = false;
-
     private static final int[] GRAD_COLORS = new int[]{Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA, Color.RED};
     private static final int[] GRAD_ALPHA = new int[]{Color.WHITE, Color.TRANSPARENT};
-
     private GradientView mBrightnessGradientView;
     private Shader mShader;
     private Drawable mPointerDrawable;
@@ -41,11 +36,9 @@ public class GradientView extends View {
     private Paint mDebugPaint;
     private Paint mPaintBackground;
     private RectF mGradientRect = new RectF();
-
     private int[] mGradColors = GRAD_COLORS;
     private int[] mGradAlpha = GRAD_ALPHA;
     private float[] mHSV = new float[]{1f, 1f, 1f};
-
     private int[] mSelectedColorGradient = new int[]{0, Color.BLACK};
     private float mRadius = 0;
     private int mSelectedColor = 0;
@@ -55,7 +48,6 @@ public class GradientView extends View {
     private int mPointerHeight;
     private int mPointerWidth;
     private boolean mLockPointerInBounds = false;
-
     private OnColorChangedListener mOnColorChangedListener;
 
     public GradientView(Context context) {
@@ -84,7 +76,9 @@ public class GradientView extends View {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintBackground = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintBackground.setColor(Color.WHITE);
-        setLayerType(View.LAYER_TYPE_SOFTWARE, isInEditMode() ? null : mPaint);
+        if (Build.VERSION.SDK_INT > 10) {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, isInEditMode() ? null : mPaint);
+        }
         mRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
 
         if (DEBUG) {
@@ -247,9 +241,13 @@ public class GradientView extends View {
         mPaint.setShader(mShader);
     }
 
+    public float getRadius() {
+        return mRadius;
+    }
+
     /**
      * Set radius for gradient rectangle
-     * @param radius
+     * @param radius the radius value
      */
     public void setRadius(float radius) {
         if(radius != mRadius) {
@@ -257,10 +255,6 @@ public class GradientView extends View {
             mRadius = radius;
             invalidate();
         }
-    }
-
-    public float getRadius() {
-        return mRadius;
     }
 
     @Override
@@ -283,8 +277,8 @@ public class GradientView extends View {
 
     /**
      * Update color based on touch events
-     * @param x
-     * @param y
+     * @param x x coordinate
+     * @param y y coordinate
      */
     protected void onUpdateColorSelection(int x, int y) {
         x = (int) Math.max(mGradientRect.left, Math.min(x, mGradientRect.right));
@@ -316,15 +310,15 @@ public class GradientView extends View {
 
     /**
      * Switch view into brightness gradient only
-     * @param isBrightnessGradient
+     * @param isBrightnessGradient define if the gradient is brightness
      */
     public void setIsBrightnessGradient(boolean isBrightnessGradient) {
         mIsBrightnessGradient = isBrightnessGradient;
     }
 
     /**
-     * Get current selectec color
-     * @return
+     * Get current selected color
+     * @return int representing the actual selected color
      */
     public int getSelectedColor() {
         return mSelectedColor;
@@ -332,7 +326,7 @@ public class GradientView extends View {
 
     /**
      * Update current color
-     * @param selectedColor
+     * @param selectedColor the actual selected color
      */
     public void setColor(int selectedColor) {
         setColor(selectedColor, true);
@@ -359,8 +353,8 @@ public class GradientView extends View {
 
     /**
      * Get start color for gradient
-     * @param hsv
-     * @return
+     * @param hsv hsv float array of the color
+     * @return the color for gradient
      */
     private int getColorForGradient(float[] hsv) {
         if (hsv[2] != 1f) {
@@ -387,7 +381,7 @@ public class GradientView extends View {
 
     /**
      * Add reference for brightness view
-     * @param brightnessGradient
+     * @param brightnessGradient brightness of the gradiente
      */
     public void setBrightnessGradientView(GradientView brightnessGradient) {
         if (mBrightnessGradientView != brightnessGradient) {
@@ -404,16 +398,17 @@ public class GradientView extends View {
         mOnColorChangedListener = onColorChangedListener;
     }
 
-    //region HSL math
     /**
      *
      * @param x x coordinate of gradient
-     * @return
+     * @return float representing the Hue
      */
     private float pointToHue(float x) {
         x = x - mGradientRect.left;
         return x * 360f / mGradientRect.width();
     }
+
+    //region HSL math
 
     private int hueToPoint(float hue) {
         return (int)(mGradientRect.left + ((hue * mGradientRect.width()) / 360));
@@ -422,8 +417,8 @@ public class GradientView extends View {
     /**
      * Get saturation
      *
-     * @param y
-     * @return
+     * @param y y coordinate
+     * @return float representing the Saturation
      */
     private float pointToSaturation(float y) {
         y = y - mGradientRect.top;
@@ -438,8 +433,8 @@ public class GradientView extends View {
     /**
      * Get value of brightness
      *
-     * @param x
-     * @return
+     * @param x x coordinate
+     * @return the float value representing the point brightness
      */
     private float pointToValueBrightness(float x) {
         x = x - mGradientRect.left;
@@ -450,7 +445,6 @@ public class GradientView extends View {
         val = 1 - val;
         return (int) (mGradientRect.left + (mGradientRect.width() * val));
     }
-    //endregion HSL math
 
     public void setPointerDrawable(Drawable pointerDrawable) {
         if (mPointerDrawable != pointerDrawable) {
@@ -458,6 +452,7 @@ public class GradientView extends View {
             requestLayout();
         }
     }
+    //endregion HSL math
 
     public void setLockPointerInBounds(boolean lockPointerInBounds) {
         if (lockPointerInBounds != mLockPointerInBounds) {
@@ -493,7 +488,22 @@ public class GradientView extends View {
         setColor(ss.color, true);
     }
 
+    public interface OnColorChangedListener {
+        void onColorChanged(GradientView view, int color);
+    }
+
     private static class SavedState extends BaseSavedState {
+        //required field that makes Parcelables from a Parcel
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
         int color;
         boolean isBrightnessGradient;
 
@@ -513,17 +523,5 @@ public class GradientView extends View {
             out.writeInt(color);
             out.writeInt(isBrightnessGradient ? 1 : 0);
         }
-
-        //required field that makes Parcelables from a Parcel
-        public static final Parcelable.Creator<SavedState> CREATOR =
-                new Parcelable.Creator<SavedState>() {
-                    public SavedState createFromParcel(Parcel in) {
-                        return new SavedState(in);
-                    }
-
-                    public SavedState[] newArray(int size) {
-                        return new SavedState[size];
-                    }
-                };
     }
 }

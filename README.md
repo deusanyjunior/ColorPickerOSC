@@ -10,7 +10,6 @@ The settings have options to define the IP and Port.
 
 
 TODO:
-- optimize the interface object SeekBar Alpha
 - add Multicast support
 - add preference option to change the OSC mapping
 

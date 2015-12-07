@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Messenger;
@@ -18,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -28,7 +27,7 @@ import java.lang.ref.WeakReference;
 
 import br.usp.ime.compmus.ConnectionInterface;
 import br.usp.ime.compmus.Packet;
-import br.usp.ime.compmus.SettingsActivity;
+import br.usp.ime.compmus.PreferencesActivity;
 import br.usp.ime.compmus.UnicastUDP;
 
 
@@ -42,66 +41,12 @@ public class MainActivity extends Activity {
     private int red = 0;
     private int green = 0;
     private int blue = 0;
+    private LinearLayout layoutBackground;
     private ToggleButton toggleConnection;
-    private RadioGroup radioGroupMode;
     private SeekBar seekBarAlpha;
     private ConnectionInterface[] connections = {new UnicastUDP()};
     private ConnectionInterface connection = null;
     private boolean isARGB = true;
-    private ToggleButton.OnCheckedChangeListener toggleConnectionOnCheckedChangeListener = new ToggleButton.OnCheckedChangeListener() {
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-            if (isChecked) {
-
-                connect();
-            } else {
-
-                disconnect();
-            }
-        }
-    };
-    private RadioGroup.OnCheckedChangeListener radioGroupModeOnCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
-
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-            if (checkedId == R.id.radioButtonARGB) {
-
-                setIsARGB(true);
-                updateValues();
-            } else if (checkedId == R.id.radioButtonRGBA){
-
-                setIsARGB(false);
-                updateValues();
-            }
-        }
-    };
-    private SeekBar.OnSeekBarChangeListener seekBarAlphaOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
-
-        int alphaValue = 255;
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-            alphaValue = progress;
-            setAlpha(alphaValue);
-            updateValues();
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
-    };
-
-    // Widgets
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,15 +56,15 @@ public class MainActivity extends Activity {
 
         loadWidgets();
 
-        mTop = (GradientView)findViewById(R.id.top);
-        mBottom = (GradientView)findViewById(R.id.bottom);
+        mTop = (GradientView) findViewById(R.id.top);
+        mBottom = (GradientView) findViewById(R.id.bottom);
         mTop.setBrightnessGradientView(mBottom);
         mBottom.setOnColorChangedListener(new GradientView.OnColorChangedListener() {
 
             @Override
             public void onColorChanged(GradientView view, int color) {
 
-//                setAlpha(Color.alpha(color));
+//                setAlpha(Color.alpha(color)); // always 255. we will use the SeekBarAlpha!
                 setRed(Color.red(color));
                 setGreen(Color.green(color));
                 setBlue(Color.blue(color));
@@ -132,7 +77,6 @@ public class MainActivity extends Activity {
     }
 
 
-    // Toggle Connection
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,39 +85,83 @@ public class MainActivity extends Activity {
         return true;
     }
 
-
-    // RadioGroup Mode
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.menu_item_settings:
-                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                Intent intentSettings = new Intent(MainActivity.this, PreferencesActivity.class);
                 startActivity(intentSettings);
-                break;
-
+                return true;
             default:
-                break;
+                return super.onContextItemSelected(item);
         }
-        return true;
     }
 
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+
+        disconnect();
+        toggleConnection.setChecked(false);
+    }
+
+    // Toggle Connection
+    private ToggleButton.OnCheckedChangeListener toggleConnectionOnCheckedChangeListener() {
+
+        return new ToggleButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged (CompoundButton buttonView, boolean isChecked){
+
+                if (buttonView.isChecked()) {
+
+                    connect();
+                } else {
+
+                    disconnect();
+                }
+            }
+        };
+    }
 
     // SeekBar Alpha
+    private SeekBar.OnSeekBarChangeListener seekBarAlphaOnSeekBarChangeListener() {
 
+        return new SeekBar.OnSeekBarChangeListener() {
+
+            int alphaValue = 255;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                alphaValue = progress;
+                setAlpha(alphaValue);
+                updateValues();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        };
+
+    }
     private void loadWidgets() {
 
-        toggleConnection = (ToggleButton) findViewById(R.id.toggleConnection);
-        toggleConnection.setOnCheckedChangeListener(toggleConnectionOnCheckedChangeListener);
+        layoutBackground = (LinearLayout) findViewById(R.id.layoutBackground);
 
-        radioGroupMode = (RadioGroup) findViewById(R.id.radioGroupMode);
-        radioGroupMode.setOnCheckedChangeListener(radioGroupModeOnCheckedChangeListener);
+        toggleConnection = (ToggleButton) findViewById(R.id.toggleConnection);
+        toggleConnection.setOnCheckedChangeListener(toggleConnectionOnCheckedChangeListener());
 
         seekBarAlpha = (SeekBar) findViewById(R.id.seekBarAlpha);
         seekBarAlpha.setMax(255);
         seekBarAlpha.setProgress(0);
-        seekBarAlpha.setOnSeekBarChangeListener(seekBarAlphaOnSeekBarChangeListener);
+        seekBarAlpha.setOnSeekBarChangeListener(seekBarAlphaOnSeekBarChangeListener());
     }
 
 
@@ -225,6 +213,9 @@ public class MainActivity extends Activity {
 
     synchronized private void updateValues() {
 
+        // set the color on background
+        layoutBackground.setBackgroundColor(Color.argb(getAlpha(), getRed(), getGreen(), getBlue()));
+
         // Alpha Red Green Blue
         if (isARGB) {
 
@@ -260,10 +251,20 @@ public class MainActivity extends Activity {
         }
     }
 
+    // Connection codes
+
     private void connect() {
 
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (preferences.getString("pref_colorMode", " ").equals("ARGB")) {
+
+            setIsARGB(true);
+        } else {
+
+            setIsARGB(false);
+        }
 
         for (ConnectionInterface connection : connections) {
 
@@ -277,8 +278,6 @@ public class MainActivity extends Activity {
         }
     }
 
-            // Connection codes
-
     private void disconnect() {
 
         SharedPreferences preferences =
@@ -288,15 +287,17 @@ public class MainActivity extends Activity {
 
             if (preferences.getString("pref_listConnections", " ").equals(connection.getSettingName())) {
 
-                AsyncTaskDisconnect disconnectTask = new AsyncTaskDisconnect();
                 this.connection = connection;
+                AsyncTaskDisconnect disconnectTask = new AsyncTaskDisconnect();
                 disconnectTask.execute(this.connection);
                 break;
             }
         }
     }
 
+
     // UiHandler
+
     static class UiHandler extends android.os.Handler {
 
         public final WeakReference<MainActivity> parent;
@@ -325,11 +326,6 @@ public class MainActivity extends Activity {
             ConnectionInterface connection = params[0];
             connection.loadSettings(context);
             connection.connect();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             if (connection.isConnected()) {
 
                 try {
@@ -360,11 +356,7 @@ public class MainActivity extends Activity {
 
             ConnectionInterface connection = params[0];
             connection.disconnect();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             if (connection.isConnected()) {
 
                 try {

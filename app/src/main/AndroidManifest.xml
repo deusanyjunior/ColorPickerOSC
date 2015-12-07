@@ -35,8 +35,8 @@
         </activity>
 
         <activity
-            android:name="br.usp.ime.compmus.SettingsActivity"
-            android:label="@string/title_activity_settings"
+            android:name="br.usp.ime.compmus.PreferencesActivity"
+            android:label="@string/title_activity_preferences"
             android:screenOrientation="portrait" >
         </activity>
     </application>

@@ -3,23 +3,13 @@
  */
 package br.usp.ime.compmus;
 
-import java.io.IOException;
-import java.net.BindException;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.Date;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import com.scurab.android.colorpicker.R;
 
 import com.illposed.osc.OSCMessage;
-import com.illposed.osc.OSCPortIn;
 import com.illposed.osc.OSCPortOut;
 
 /**
@@ -75,12 +65,6 @@ public class UnicastUDP implements ConnectionInterface {
 		
 		boolean senderStarted = this.startSender();
 
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		if (!senderStarted) {
 
 			isConnected = false;
@@ -94,20 +78,7 @@ public class UnicastUDP implements ConnectionInterface {
 	@Override
 	public boolean disconnect() {
 		
-		boolean senderStopped = stopSender();
-
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		if (!senderStopped) {
-
-			isConnected = true;
-			return false;
-		}
-
+		stopSender();
 		isConnected = false;
 		return true;
 	}
@@ -131,11 +102,7 @@ public class UnicastUDP implements ConnectionInterface {
 		try {
 			this.sender.send(message);
 			return true;
-		} catch (SocketException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -148,13 +115,7 @@ public class UnicastUDP implements ConnectionInterface {
 			InetAddress address = InetAddress.getByName(this.host);
 			this.sender = new OSCPortOut(address, this.port);			
 			return true;
-		} catch (BindException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (SocketException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -162,14 +123,12 @@ public class UnicastUDP implements ConnectionInterface {
 		return false;
 	}
 	
-	private boolean stopSender() {
+	private void stopSender() {
 
 		if (this.sender != null) {
 
 			this.sender.close();
 			this.sender = null;
 		}
-
-		return false;
 	}
 }

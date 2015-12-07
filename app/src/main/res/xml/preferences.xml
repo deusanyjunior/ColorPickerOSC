@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
+        android:entries="@array/pref_colorMode"
+        android:entryValues="@array/pref_colorModeValues"
+        android:key="pref_colorMode"
+        android:summary="@string/pref_summaryListColorMode"
+        android:title="@string/pref_titleListColorMode">
+    </ListPreference>
+    <ListPreference
         android:entries="@array/pref_connections"
         android:entryValues="@array/pref_connectionsValues"
         android:key="pref_listConnections"
-        android:summary="@string/pref_sumaryListConnections"
+        android:summary="@string/pref_summaryListConnections"
         android:title="@string/pref_titleListConnections">
     </ListPreference>
     <PreferenceScreen
