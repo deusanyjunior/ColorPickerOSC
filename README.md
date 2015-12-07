@@ -8,10 +8,17 @@ Each modification is sent through OSC to an IP defined on the settings.
 Actually, the UnicastUDP is the only protocol available.
 The settings have options to define the IP and Port.
 
+The OSC messages follow the structure:
+- /colorpickerosc float float float float
+
+The float order depends on the color mode:
+- ARGB
+- RGBA
 
 TODO:
 - add Multicast support
 - add preference option to change the OSC mapping
+- send values regularly
 
 
 #### License

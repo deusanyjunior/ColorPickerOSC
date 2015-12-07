@@ -14,7 +14,7 @@ public interface ConnectionInterface {
 	/*
 	 * Address of push messages or push channel
 	 */
-	String PUSH = "colorpickerosc-color";
+	String PUSH = "colorpickerosc";
 
 	/**
 	 * Use this method to get the name of the connection interface.

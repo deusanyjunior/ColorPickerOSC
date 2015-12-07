@@ -76,6 +76,13 @@ public class MainActivity extends Activity {
         mTop.setColor(color);
     }
 
+    @Override
+    protected void onDestroy() {
+
+        disconnect();
+        super.onDestroy();
+    }
+
 
 
     @Override
@@ -240,7 +247,7 @@ public class MainActivity extends Activity {
 
             case 0:
                 toggleConnection.setChecked(false);
-                Toast.makeText(context, "NOT connected.",Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Disconnected.",Toast.LENGTH_LONG).show();
                 break;
             case 1:
                 toggleConnection.setChecked(true);
