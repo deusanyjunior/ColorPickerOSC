@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
 
-    <string name="pref_unicastUDPHostDefault">192.168.0.100</string>
+    <string name="pref_unicastUDPHostDefault">255.255.255.255</string>
     <string name="pref_unicastUDPPortDefault">65535</string>
 
-    <string name="pref_multicastHostDefault">233.142.23.2</string>
+    <string name="pref_multicastHostDefault">224.2.2.4</string>
     <string name="pref_multicastPortDefault">56789</string>
     <string name="pref_multicastTTLDefault">100</string>
     <string name="pref_multicastInterfaceDefault">0</string>

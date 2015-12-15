@@ -26,6 +26,7 @@ import android.widget.ToggleButton;
 import java.lang.ref.WeakReference;
 
 import br.usp.ime.compmus.ConnectionInterface;
+import br.usp.ime.compmus.Multicast;
 import br.usp.ime.compmus.Packet;
 import br.usp.ime.compmus.PreferencesActivity;
 import br.usp.ime.compmus.UnicastUDP;
@@ -44,7 +45,7 @@ public class MainActivity extends Activity {
     private LinearLayout layoutBackground;
     private ToggleButton toggleConnection;
     private SeekBar seekBarAlpha;
-    private ConnectionInterface[] connections = {new UnicastUDP()};
+    private ConnectionInterface[] connections = {new UnicastUDP(), new Multicast()};
     private ConnectionInterface connection = null;
     private boolean isARGB = true;
 
@@ -275,8 +276,9 @@ public class MainActivity extends Activity {
 
         for (ConnectionInterface connection : connections) {
 
+            System.out.println("connection: "+connection.getName());
             if (preferences.getString("pref_listConnections", " ").equals(connection.getSettingName())) {
-
+                System.out.println("matched!");
                 AsyncTaskConnect connectTask = new AsyncTaskConnect();
                 this.connection = connection;
                 connectTask.execute(this.connection);
