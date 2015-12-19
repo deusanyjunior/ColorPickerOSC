@@ -16,9 +16,14 @@ The float order depends on the color mode:
 - RGBA
 
 TODO:
-- add Multicast support
+- add Multicast support to Arduino
 - add preference option to change the OSC mapping
-- send values regularly
+- send values regularly as an option
+- add OLA osc format
+- add channel mapping to app interface
+- add sliders for colors
+- add scene record
+- add automation
 
 
 #### License
